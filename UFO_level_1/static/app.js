@@ -7,7 +7,7 @@ var buttons = d3.select('#filter-btn');
 var inputfield1 = d3.select('#datetitme');
 var inputfield2 = d3.select('#city');
 var restbtn = d3.select('#reset-btn');
-var columns = ['datetime', 'city', 'state', 'country', 'shape', 'durationMinutes', 'comments']
+var columns = ['date/time', 'city', 'state', 'country', 'shape', 'comments']
 
 var populate = (datainput) => {
     datainput.forEach(ufo_sightings => {
