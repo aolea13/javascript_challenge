@@ -1,35 +1,57 @@
-// Data Table Conect
+// from data.js
 var tableData = data;
 
-// Table Set-Up
-var tbody = d3.select('tbody');
-var buttons = d3.select('#filter-btn');
-var input_field1 = d3.select('#datetitme');
-var input_field2 = d3.select('#city');
-var restbtn = d3.select('#reset-btn');
-var columns = ['datetime', 'city', 'state', 'country', 'shape', 'durationMinutes', 'comments']
-
-var populate = (datainput) => {
-    datainput.forEach(ufo_sightings => {
-        var row = tbody.append('tr');
-        columns.forEach(column => row.append('td').text(ufo_sightings[column])
-        )
+// function to display UFO sightings
+function tableDisplay(ufoSightings) {
+  var tbody = d3.select("tbody");
+  ufoSightings.forEach((ufoRecord) => {
+    var row = tbody.append("tr");
+    Object.entries(ufoRecord).forEach(([key, value]) => {
+      var cell = row.append("td");
+      cell.html(value);
     });
-}
+  });
+};
 
-//Populate table
-populate(data);
 
-//Filter by Attribute
-button.on('click', () => {
+// clear the table for new data
+function deleteTbody() {
+    d3.select("tbody")
+      .selectAll("tr").remove()
+      .selectAll("td").remove();
+  };
+  
+  // initial display of all UFO sightings
+  console.log(tableData);
+  tableDisplay(tableData);
+  
+  // 'Filter Table' button
+  var button = d3.select("#filter-btn");
+  
+  // filter the database and display
+  button.on("click", function(event) {
     d3.event.preventDefault();
-    var input_field1 = input_field1.property('value').trim();
-    var input_field2 = input_field2.property('value').trim();
-    var filter_date = data.filter(data => data.datetime === input_date); console.log(filter_date)
-    var filter_city = data.filter(data => data.city === input_city); console.log(filter_city)
-    var filter_data = data.filter(data => data.datetime === input_date && data.city === input_city); console.log(filter_data)
-
-    //Add Filtered Data to Table
+    deleteTbody();
+    var dateInput = d3.select("#datetime").property("value");
     
-
-}
+    if (dateInput.trim() === "" ) {
+      // display the whole database if the date field has no date
+      var filteredData = tableData;
+    } else {
+      // otherwise, display the filtered dataset  
+      var filteredData = tableData.filter(ufoSighting => 
+        ufoSighting.datetime === dateInput.trim());
+    };
+  
+    // display message if no records found
+    if (filteredData.length == 0) {
+      d3.select("tbody")
+        .append("tr")
+        .append("td")
+          .attr("colspan", 7)
+          .html("<h4>No Records Found</h4>");
+    };
+  
+    console.log(filteredData);
+    tableDisplay(filteredData);
+  });
